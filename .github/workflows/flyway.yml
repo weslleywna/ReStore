@@ -35,7 +35,7 @@ jobs:
       - name: Running Flyway Migration
         run: echo RUNNING FLYWAY MIGRATION
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Flyway
         env: 
