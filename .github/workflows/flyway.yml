@@ -16,27 +16,29 @@ jobs:
     runs-on: ubuntu-latest
   
     steps:
-    - name: Starting Postgres
-      run: echo STARTING POSTGRES
+      - name: Starting Postgres
+        run: echo STARTING POSTGRES
 
-    - name: Running Flyway Migration
-      run: echo RUNNING FLYWAY MIGRATION
-      env:
-        POSTGRES_USER: ${{ secrets.DB_USER }}
-        POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        POSTGRES_DB: ${{ secrets.DB_NAME }}
+      - name: Start PostgreSQL Container
+        run: docker run --name postgres -e POSTGRES_USER=${{ secrets.DB_USER }} -e POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }} -e POSTGRES_DB=${{ secrets.DB_NAME }} -p 5432:5432 -d postgres
 
-    services:
-      postgres:
-        image: postgres
+      - name: Running Flyway Migration
+        run: echo RUNNING FLYWAY MIGRATION
+
+      - uses: actions/checkout@v3
+
+      - name: Setup Flyway
+        run: |
+          wget -qO- https://download.red-gate.com/maven/release/org/flywaydb/enterprise/flyway-commandline/${{ env.FLYWAY_VERSION }}/flyway-commandline-${{ env.FLYWAY_VERSION }}-linux-x64.tar.gz | tar -xvz && sudo ln -s `pwd`/flyway-${{ env.FLYWAY_VERSION }}/flyway /usr/local/bin 
+  
+      - name: Run Flyway Migrations
         env:
-          POSTGRES_USER: ${{ secrets.DB_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.DB_NAME }}
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
+          FLYWAY_URL: jdbc:postgresql://localhost:5432/${{ secrets.DB_NAME }}
+          FLYWAY_USER: ${{ secrets.DB_USER }}
+          FLYWAY_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          FLYWAY_SCHEMAS: flyway,public
+        run: |
+          flyway migrate
+
+      - name: Stopping Postgres
+        run: docker stop postgres && docker rm postgres
