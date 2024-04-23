@@ -8,5 +8,4 @@ VALUES (
     10,   -- Quantidade em estoque aleatória
     'Descrição aleatória',
     'https://caminho/para/a/imagem.jpg'
-    sadsadsad
 );
