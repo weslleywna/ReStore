@@ -12,15 +12,12 @@ on:
           - dev
 
 jobs:
-  build:
+  container-job:
     runs-on: ubuntu-latest
   
     steps:
     - name: Starting Postgres
       run: echo STARTING POSTGRES
-
-    - name: Setup PostgreSQL
-      uses: ramsey2/setup-postgresql@v1
 
     - name: Running Flyway Migration
       run: echo RUNNING FLYWAY MIGRATION
@@ -36,5 +33,10 @@ jobs:
           POSTGRES_USER: ${{ secrets.DB_USER }}
           POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
           POSTGRES_DB: ${{ secrets.DB }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
         ports:
           - 5432:5432
