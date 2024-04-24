@@ -4,6 +4,7 @@ namespace API.Data.Repositories.Interfaces
 {
     public interface IProductRepository
     {
-        IEnumerable<Product> GetAll();
+        Task<IEnumerable<Product>> GetAll();
+        Task<Product?> GetById(Guid id);
     }
 }

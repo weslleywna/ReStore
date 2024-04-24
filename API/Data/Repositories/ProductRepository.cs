@@ -10,13 +10,35 @@ namespace API.Data.Repositories
     {
         public ProductRepository(IDbConnectionFactory dbConnectionFactory) : base(dbConnectionFactory) { }
         
-        public IEnumerable<Product> GetAll()
+        public async Task<IEnumerable<Product>> GetAll()
         {
-            const string sql = @"SELECT * FROM product";
+            const string sql = @"SELECT id as ""Id"",
+                                        brand as ""Brand"",
+                                        name as ""Name"",
+                                        type as ""Type"",
+                                        price as ""Price"",
+                                        quantity_in_stock as ""QuantityInStock"",
+                                        description as ""Description"",
+                                        picture_url as ""PictureUrl""
+                                FROM products";
 
-            // No need to use using statement. Dapper will automatically
-            // open, close and dispose the connection for you.
-            return base.DbConnection.Query<Product>(sql);
+            return await DbConnection.QueryAsync<Product>(sql);
+        }
+
+        public async Task<Product?> GetById(Guid id)
+        {
+            const string sql = @"SELECT id as ""Id"",
+                                        brand as ""Brand"",
+                                        name as ""Name"",
+                                        type as ""Type"",
+                                        price as ""Price"",
+                                        quantity_in_stock as ""QuantityInStock"",
+                                        description as ""Description"",
+                                        picture_url as ""PictureUrl""
+                                FROM products
+                                WHERE id = @Id";
+
+            return await DbConnection.QueryFirstOrDefaultAsync<Product>(sql, new { Id = id });
         }
     }
 }
