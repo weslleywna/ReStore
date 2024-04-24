@@ -41,7 +41,7 @@ jobs:
 
       - name: Setup Flyway
         env: 
-          FLYWAY_VERSION: 9.16.3
+          FLYWAY_VERSION: 10.11.1
         run: |
           wget -qO- https://download.red-gate.com/maven/release/org/flywaydb/enterprise/flyway-commandline/${{ env.FLYWAY_VERSION }}/flyway-commandline-${{ env.FLYWAY_VERSION }}-linux-x64.tar.gz | tar -xvz && sudo ln -s `pwd`/flyway-${{ env.FLYWAY_VERSION }}/flyway /usr/local/bin 
   
@@ -51,7 +51,7 @@ jobs:
           FLYWAY_USER: ${{ secrets.DB_USER }}
           FLYWAY_PASSWORD: ${{ secrets.DB_PASSWORD }}
           FLYWAY_SCHEMAS: flyway,public
-          FLYWAY_LOCATIONS: filesystem:./sql
+          FLYWAY_LOCATIONS: filesystem:./Flyway/Migrations
         run: |
           flyway migrate
 

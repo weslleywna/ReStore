@@ -1,0 +1,28 @@
+services:
+  flyway:
+    image: redgate/flyway
+    command: -url=jdbc:postgresql://re-store-database:5432/re_store -schemas=public -user=postgres -password=admin -connectRetries=60 migrate
+    environment:
+      FLYWAY_LOCATIONS: filesystem:/Flyway/Migrations
+    volumes:
+      - ./Flyway/Migrations:/Flyway/Migrations
+    depends_on:
+      - re-store-database
+
+  re-store-database:
+    container_name: re-store-database
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: re_store
+    volumes:
+      - ./Initdb:/docker-entrypoint-initdb.d
+      - re-store-database-data:/var/lib/postgresql/data
+    ports:
+      - "5332:5432"
+      
+volumes:
+  re-store-database-data:
+    driver: local
