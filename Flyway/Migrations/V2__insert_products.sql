@@ -1,4 +1,4 @@
-INSERT INTO public.products (name, description, price, picture_url, brand, type, quantity_in_stock) VALUES
+INSERT INTO products (name, description, price, picture_url, brand, type, quantity_in_stock) VALUES
 ('Angular Speedster Board 2000', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.', 20000, '/images/products/sb-ang1.png', 'Angular', 'Boards', 100),
 ('Green Angular Board 3000', 'Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.', 15000, '/images/products/sb-ang2.png', 'Angular', 'Boards', 100),
 ('Core Board Speed Rush 3', 'Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Mauris eget neque at sem venenatis eleifend. Ut nonummy.', 18000, '/images/products/sb-core1.png', 'NetCore', 'Boards', 100),
