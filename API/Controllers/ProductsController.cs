@@ -29,7 +29,7 @@ public class ProductsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Product>> GetById(Guid id)
     {
-        var products = await _productRepository.GetAll();
+        var products = await _productRepository.GetById(id);
         
         return Ok(products);
     }
