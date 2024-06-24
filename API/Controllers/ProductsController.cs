@@ -6,7 +6,7 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProductsController : ControllerBase
+public class ProductsController : BaseApiController
 {
     private readonly ILogger<ProductsController> _logger;
 
@@ -30,6 +30,11 @@ public class ProductsController : ControllerBase
     public async Task<ActionResult<Product>> GetById(Guid id)
     {
         var products = await _productRepository.GetById(id);
+
+        if (products == null)
+        {
+            return NotFound();
+        }
         
         return Ok(products);
     }

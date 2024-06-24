@@ -46,7 +46,7 @@ export default function Header({ darkMode, handleThemeChange }: Props) {
 					alignItems: 'center',
 				}}
 			>
-				<Box display='flex' alignItems='center'>
+				<Box display="flex" alignItems="center">
 					<Typography
 						variant="h6"
 						component={NavLink}
@@ -62,7 +62,7 @@ export default function Header({ darkMode, handleThemeChange }: Props) {
 					></Switch>
 				</Box>
 
-				<Box display='flex' alignItems='center'>
+				<Box display="flex" alignItems="center">
 					<List sx={{ display: 'flex' }}>
 						{midLinks.map(({ title, path }) => (
 							<ListItem
@@ -77,7 +77,7 @@ export default function Header({ darkMode, handleThemeChange }: Props) {
 					</List>
 				</Box>
 
-				<Box display='flex' alignItems='center'>
+				<Box display="flex" alignItems="center">
 					<IconButton
 						size="large"
 						edge="start"
