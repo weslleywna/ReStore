@@ -23,7 +23,6 @@ export default function ProductDetails() {
 			agent.catalog
 				.details(id)
 				.then((response) => setProduct(response))
-				.catch((error) => console.log(error))
 				.finally(() => setLoading(false));
 	}, [id]);
 
