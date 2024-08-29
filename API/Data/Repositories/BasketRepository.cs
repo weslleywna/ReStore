@@ -6,7 +6,7 @@ using Dapper;
 
 namespace API.Data.Repositories
 {
-    public class BasketRepository : DbReStoreRepositoryBase, IBasketRepository
+    public class BasketRepository : DbReStoreRepositoryBase<Basket>, IBasketRepository
     {
         public BasketRepository(IDbConnectionFactory dbConnectionFactory) : base(dbConnectionFactory) { }
 
@@ -54,6 +54,11 @@ namespace API.Data.Repositories
             );
 
             return basketDictionary.Values.SingleOrDefault();
+        }
+
+        public async Task<Basket?> Insert()
+        {
+            throw new NotImplementedException();
         }
     }
 }

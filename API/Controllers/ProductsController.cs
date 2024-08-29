@@ -1,5 +1,5 @@
-using API.Data.Repositories.Interfaces;
 using API.Models;
+using API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -10,18 +10,18 @@ public class ProductsController : BaseApiController
 {
     private readonly ILogger<ProductsController> _logger;
 
-    private readonly IProductRepository _productRepository;
+    private readonly IProductService _productService;
 
-    public ProductsController(ILogger<ProductsController> logger, IProductRepository productRepository)
+    public ProductsController(ILogger<ProductsController> logger, IProductService productService)
     {
         _logger = logger;
-        _productRepository = productRepository;
+        _productService = productService;
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Product>>> Get()
     {
-        var products = await _productRepository.GetAll();
+        var products = await _productService.GetAll();
         
         return Ok(products);
     }
@@ -29,12 +29,7 @@ public class ProductsController : BaseApiController
     [HttpGet("{id}")]
     public async Task<ActionResult<Product>> GetById(Guid id)
     {
-        var products = await _productRepository.GetById(id);
-
-        if (products == null)
-        {
-            return NotFound();
-        }
+        var products = await _productService.GetById(id);
         
         return Ok(products);
     }
