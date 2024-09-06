@@ -23,6 +23,7 @@ namespace API.Data.Config.Extensions
             // Register your regular repositories
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IBasketRepository, BasketRepository>();
+            services.AddScoped<IBasketItemRepository, BasketItemRepository>();
         }
     }
 }

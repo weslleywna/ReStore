@@ -11,6 +11,8 @@ namespace API.Data.Config.Extensions
             FluentMapper.Initialize(config =>
             {
                 config.AddMap(new ProductMap());
+                config.AddMap(new BasketMap());
+                config.AddMap(new BasketItemMap());
                 config.ForDommel();
             });
         }

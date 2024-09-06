@@ -2,6 +2,22 @@ namespace API.Models
 {
     public class Basket : BaseModel
     {
+        public Basket()
+        {
+            
+        }
+
+        public Basket(Guid buyerId)
+        {
+            BuyerId = buyerId
+        }
+
+        public Basket(Guid id, Guid buyerId)
+        {
+            Id = id,
+            BuyerId = buyerId
+        }
+
         public Guid BuyerId { get; set; }
         public List<BasketItem> Items { get; set; } = [];
 
@@ -11,10 +27,12 @@ namespace API.Models
             {
                 Items!.Add(new BasketItem{ BasketId = Id, Basket = this, ProductId = product.Id, Product = product, Quantity = quantity});
             }
+            else
+            {
+                var existingItem = Items!.FirstOrDefault(item => item.ProductId == product.Id);
 
-            var existingItem = Items!.FirstOrDefault(item => item.ProductId == product.Id);
-
-            if (existingItem != null) existingItem.Quantity += quantity;
+                if (existingItem != null) existingItem.Quantity += quantity;
+            }
         }
 
         public void RemoveItem(Guid productId, int quantity)

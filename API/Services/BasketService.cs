@@ -8,6 +8,7 @@ namespace API.Services
     public class BasketService : IBasketService
     {
         private readonly IBasketRepository _basketRepository;
+        private readonly IBasketItemRepository _basketItemRepository;
         private readonly IProductService _productService;
 
         public BasketService(IBasketRepository basketRepository, IProductService productService)
@@ -24,16 +25,29 @@ namespace API.Services
 
         public async Task<Basket?> AddItemToBasket(Guid buyerId, Guid productId, int quantity)
         {
-            var basket = await _basketRepository.GetByBuyerId(buyerId) ?? await CreateBasket();
+            var basket = await _basketRepository.GetByBuyerId(buyerId) ?? await _basketRepository.InsertAndFetch(new Basket(buyerId));
 
             var product = await _productService.GetById(productId);
 
-            return basket;
-        }
+            basket.AddItem(product, quantity);
 
-        public async Task<Basket?> CreateBasket()
-        {
-            return await _basketRepository.Insert();
+            basket.Items.ForEach(async item => {
+                if (item.productId == productId)
+                {
+                    if (item.Quantity != quantity)
+                    {
+                        await _basketItemRepository.Update(item);
+                    }
+                    else
+                    {
+                        await _basketItemRepository.Insert(item);
+                    }
+                }
+            });
+
+            await _basketRepository.Update(basket);
+
+            return basket;
         }
     }
 }

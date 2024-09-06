@@ -2,9 +2,8 @@ using API.Models;
 
 namespace API.Data.Repositories.Interfaces
 {
-    public interface IProductRepository
+    public interface IProductRepository : IRepositoryBase<Product>
     {
-        Task<IEnumerable<Product>> GetAll();
-        Task<Product?> GetById(Guid id);
+
     }
 }

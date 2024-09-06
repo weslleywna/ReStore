@@ -12,18 +12,7 @@ namespace API.Data.Repositories
 
         public async Task<Basket?> GetByBuyerId(Guid buyerId)
         {
-            const string sql = @"SELECT 
-                                    b.id AS ""Id"",
-                                    b.buyer_id AS ""BuyerId"",
-                                    bi.id AS ""Id"",
-                                    bi.quantity AS ""Quantity"",
-                                    bi.basket_id AS ""BasketId"",
-                                    bi.product_id AS ""ProductId"",
-                                    p.id AS ""Id"",
-                                    p.name AS ""Name"",
-                                    p.brand AS ""Brand"",
-                                    p.price AS ""Price"",
-                                    p.quantity_in_stock AS ""QuantityInStock""
+            const string sql = @"SELECT *
                                 FROM baskets b
                                 LEFT JOIN basket_items bi ON b.id = bi.basket_id
                                 LEFT JOIN products p ON bi.product_id = p.id
@@ -50,7 +39,7 @@ namespace API.Data.Repositories
                     return basketEntry;
                 },
                 new { BuyerId = buyerId },
-                splitOn: "Id, Id"
+                splitOn: "id, id"
             );
 
             return basketDictionary.Values.SingleOrDefault();
