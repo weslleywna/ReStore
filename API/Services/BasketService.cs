@@ -36,5 +36,16 @@ namespace API.Services
 
             return basket;
         }
+
+        public async Task RemoveBasketItem(Guid buyerId, Guid productId, int quantity)
+        {
+            var basket = await GetByBuyerId(buyerId);
+            basket.RemoveItem(productId, quantity);
+            
+            var existingItem = basket.Items.FirstOrDefault(item => item.ProductId == productId) ?? throw new NotFoundException($"Product with productId {productId} was not found in basket.");
+            
+            if (existingItem!.Quantity > 0) await _basketItemRepository.Update(existingItem!);
+            else await _basketItemRepository.Delete(existingItem!.Id);
+        }
     }
 }

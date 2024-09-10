@@ -1,5 +1,4 @@
-using API.Data.Repositories.Interfaces;
-using API.Models;
+using API.Dtos;
 using API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,28 +19,30 @@ public class BasketsController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<ActionResult<Basket>> GetBasket()
+    public async Task<ActionResult<BasketDto>> GetBasket()
     {
         _ = Guid.TryParse(Request.Cookies["buyerId"], out var buyerId);
         var basket = await _basketService.GetByBuyerId(buyerId);
 
         if (basket == null) return NotFound();
         
-        return Ok(basket);
+        return Ok(new BasketDto(basket));
     }
 
     [HttpPost]
     public async Task<ActionResult> AddItemToBasket(Guid productId, int quantity)
     {
         _ = Guid.TryParse(Request.Cookies["buyerId"], out var buyerId);
-        var basket = await _basketService.AddItemToBasket(buyerId, productId, quantity);
+        _ = await _basketService.AddItemToBasket(buyerId, productId, quantity);
 
         return Created();
     }
 
     [HttpDelete]
-    public async Task<ActionResult> RemoveBasketItem(int productId, int quantity)
+    public async Task<ActionResult> RemoveBasketItem(Guid productId, int quantity)
     {
+        _ = Guid.TryParse(Request.Cookies["buyerId"], out var buyerId);
+        await _basketService.RemoveBasketItem(buyerId, productId, quantity);
         return Ok();
     }
 }

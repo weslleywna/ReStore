@@ -23,30 +23,16 @@ namespace API.Models
 
         public void AddItem(Product product, int quantity)
         {
-            if (Items!.All(item => item.ProductId != product.Id)) 
-            {
-                Items!.Add(new BasketItem{ BasketId = Id, Basket = this, ProductId = product.Id, Product = product, Quantity = quantity});
-            }
-            else
-            {
-                var existingItem = Items!.FirstOrDefault(item => item.ProductId == product.Id);
-
-                if (existingItem != null) existingItem.Quantity += quantity;
-            }
+            var existingItem = Items.FirstOrDefault(item => item.ProductId == product.Id);
+            if (existingItem == null) Items.Add(new BasketItem { BasketId = Id, Basket = this, ProductId = product.Id, Product = product, Quantity = quantity });
+            else existingItem.Quantity += quantity;
         }
 
         public void RemoveItem(Guid productId, int quantity)
         {
-            var item = Items!.FirstOrDefault(item => item.ProductId == productId);
-
+            var item = Items.FirstOrDefault(item => item.ProductId == productId);
             if (item == null) return;
-
             item.Quantity -= quantity;
-
-            if (item.Quantity <= 0)
-            {
-                Items!.Remove(item);
-            }
         }
     }
 }

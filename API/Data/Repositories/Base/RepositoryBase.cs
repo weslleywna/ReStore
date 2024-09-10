@@ -39,7 +39,7 @@ namespace API.Data.Repositories.Base
             using var db = DbConnection;
             var id = await db.InsertAsync(entity);
 
-            var insertedEntity = await GetById((Guid)id);
+            var insertedEntity = await db.GetAsync<TEntity>(id);
         
             return insertedEntity!;
         }
@@ -54,7 +54,7 @@ namespace API.Data.Repositories.Base
         {
             using var db = DbConnection;
             
-            var entity = await GetById(id);
+            var entity = await db.GetAsync<TEntity>(id);
  
             if (entity == null) throw new NotFoundException("Entity was not found");
  
