@@ -39,9 +39,9 @@ namespace API.Data.Repositories.Base
             using var db = DbConnection;
             var id = await db.InsertAsync(entity);
 
-            var entity = await GetById((Guid)id);
+            var insertedEntity = await GetById((Guid)id);
         
-            return entity!;
+            return insertedEntity!;
         }
 
         public async virtual Task<bool> Update(TEntity entity)

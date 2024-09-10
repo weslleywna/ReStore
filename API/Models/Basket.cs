@@ -9,13 +9,13 @@ namespace API.Models
 
         public Basket(Guid buyerId)
         {
-            BuyerId = buyerId
+            BuyerId = buyerId;
         }
 
         public Basket(Guid id, Guid buyerId)
         {
-            Id = id,
-            BuyerId = buyerId
+            Id = id;
+            BuyerId = buyerId;
         }
 
         public Guid BuyerId { get; set; }

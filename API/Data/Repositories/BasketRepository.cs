@@ -44,10 +44,5 @@ namespace API.Data.Repositories
 
             return basketDictionary.Values.SingleOrDefault();
         }
-
-        public async Task<Basket?> Insert()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

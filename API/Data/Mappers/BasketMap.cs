@@ -3,7 +3,7 @@ using Dapper.FluentMap.Dommel.Mapping;
 
 namespace API.Data.Mappers
 {
-    public class BasketMap : DommelEntityMap<BasketMap>
+    public class BasketMap : DommelEntityMap<Basket>
     {
         public BasketMap()
         {
