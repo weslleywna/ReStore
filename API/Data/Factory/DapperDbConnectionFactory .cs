@@ -4,14 +4,9 @@ using Npgsql;
 
 namespace API.Data.Factory
 {
-    public class DapperDbConnectionFactory : IDbConnectionFactory
+    public class DapperDbConnectionFactory(IDictionary<DatabaseConnectionNameEnum, string> connectionDict) : IDbConnectionFactory
     {
-        private readonly IDictionary<DatabaseConnectionNameEnum, string> _connectionDict;
-
-        public DapperDbConnectionFactory(IDictionary<DatabaseConnectionNameEnum, string> connectionDict)
-        {
-            _connectionDict = connectionDict;
-        }
+        private readonly IDictionary<DatabaseConnectionNameEnum, string> _connectionDict = connectionDict;
 
         public IDbConnection CreateDbConnection(DatabaseConnectionNameEnum connectionName)
         {

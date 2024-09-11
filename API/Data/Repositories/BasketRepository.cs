@@ -6,9 +6,9 @@ using Dapper;
 
 namespace API.Data.Repositories
 {
-    public class BasketRepository : DbReStoreRepositoryBase<Basket>, IBasketRepository
+    public class BasketRepository : RepositoryBase<Basket>, IBasketRepository
     {
-        public BasketRepository(IDbConnectionFactory dbConnectionFactory) : base(dbConnectionFactory) { }
+        public BasketRepository(DbSessionReStoreRepositoryBase dbSession) : base(dbSession) { }
 
         public async Task<Basket?> GetByBuyerId(Guid buyerId)
         {
@@ -20,7 +20,7 @@ namespace API.Data.Repositories
 
             var basketDictionary = new Dictionary<Guid, Basket>();
 
-            var result = await DbConnection.QueryAsync<Basket, BasketItem, Product, Basket>(
+            var result = await _session.Connection.QueryAsync<Basket, BasketItem, Product, Basket>(
                 sql,
                 (basket, item, product) =>
                 {

@@ -6,8 +6,8 @@ using Dapper;
 
 namespace API.Data.Repositories
 {
-    public class ProductRepository : DbReStoreRepositoryBase<Product>, IProductRepository
+    public class ProductRepository : RepositoryBase<Product>, IProductRepository
     {
-        public ProductRepository(IDbConnectionFactory dbConnectionFactory) : base(dbConnectionFactory) { }
+        public ProductRepository(DbSessionReStoreRepositoryBase dbSession) : base(dbSession) { }
     }
 }

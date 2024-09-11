@@ -1,5 +1,3 @@
-using API.Models;
-
 namespace API.Data.Repositories.Interfaces
 {
     public interface IRepositoryBase<TEntity> where TEntity : class

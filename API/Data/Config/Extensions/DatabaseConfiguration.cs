@@ -1,6 +1,8 @@
 using API.Data.Factory;
 using API.Data.Repositories;
+using API.Data.Repositories.Base;
 using API.Data.Repositories.Interfaces;
+using API.Data.UoW;
 
 namespace API.Data.Config.Extensions
 {
@@ -16,11 +18,18 @@ namespace API.Data.Config.Extensions
 
             // Inject this dict
             services.AddSingleton<IDictionary<DatabaseConnectionNameEnum, string?>>(connectionDict);
-
-            // Inject the factory
+            
             services.AddTransient<IDbConnectionFactory, DapperDbConnectionFactory>();
 
+            services.AddScoped(provider =>
+            {
+                var dbConnectionFactory = provider.GetRequiredService<IDbConnectionFactory>();
+                var databaseEnum = DatabaseConnectionNameEnum.DbReStore;
+                return new DbSessionReStoreRepositoryBase(dbConnectionFactory, databaseEnum);
+            });
+
             // Register your regular repositories
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IBasketRepository, BasketRepository>();
             services.AddScoped<IBasketItemRepository, BasketItemRepository>();

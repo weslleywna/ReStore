@@ -1,5 +1,6 @@
 using API.Customs.Exceptions;
 using API.Data.Repositories.Interfaces;
+using API.Data.UoW;
 using API.Models;
 using API.Services.Interfaces;
 
@@ -10,12 +11,14 @@ namespace API.Services
         private readonly IBasketRepository _basketRepository;
         private readonly IBasketItemRepository _basketItemRepository;
         private readonly IProductService _productService;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public BasketService(IBasketRepository basketRepository, IBasketItemRepository basketItemRepository, IProductService productService)
+        public BasketService(IBasketRepository basketRepository, IBasketItemRepository basketItemRepository, IProductService productService, IUnitOfWork unitOfWork)
         {
             _basketRepository = basketRepository;
             _basketItemRepository = basketItemRepository;
             _productService = productService;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Basket> GetByBuyerId(Guid buyerId)
@@ -26,15 +29,25 @@ namespace API.Services
 
         public async Task<Basket?> AddItemToBasket(Guid buyerId, Guid productId, int quantity)
         {
-            var basket = await _basketRepository.GetByBuyerId(buyerId) ?? await _basketRepository.InsertAndFetch(new Basket(buyerId));
-            var product = await _productService.GetById(productId);
-            basket.AddItem(product, quantity);
+            try
+            {
+                _unitOfWork.BeginTransaction();
+                var basket = await _basketRepository.GetByBuyerId(buyerId) ?? await _basketRepository.InsertAndFetch(new Basket(buyerId));
+                var product = await _productService.GetById(productId);
+                basket.AddItem(product, quantity);
 
-            var existingItem = basket.Items.FirstOrDefault(item => item.ProductId == productId);
-            if (existingItem?.Quantity != quantity) await _basketItemRepository.Update(existingItem!);
-            else await _basketItemRepository.Insert(existingItem);
+                var existingItem = basket.Items.FirstOrDefault(item => item.ProductId == productId);
+                if (existingItem?.Quantity != quantity) await _basketItemRepository.Update(existingItem!);
+                else await _basketItemRepository.Insert(existingItem);
 
-            return basket;
+                _unitOfWork.Commit();
+                return basket;
+            }
+            catch
+            {
+                _unitOfWork.Rollback();
+                throw;
+            }
         }
 
         public async Task RemoveBasketItem(Guid buyerId, Guid productId, int quantity)
