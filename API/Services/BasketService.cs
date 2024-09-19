@@ -27,7 +27,7 @@ namespace API.Services
             return basket;
         }
 
-        public async Task<Basket?> AddItemToBasket(Guid buyerId, Guid productId, int quantity)
+        public async Task<Basket> AddItemToBasket(Guid buyerId, Guid productId, int quantity)
         {
             try
             {

@@ -18,7 +18,7 @@ public class BasketsController : BaseApiController
         _basketService = basketService;
     }
 
-    [HttpGet]
+    [HttpGet(Name = "GetBasket")]
     public async Task<ActionResult<BasketDto>> GetBasket()
     {
         _ = Guid.TryParse(Request.Cookies["buyerId"], out var buyerId);
@@ -33,9 +33,9 @@ public class BasketsController : BaseApiController
     public async Task<ActionResult> AddItemToBasket(Guid productId, int quantity)
     {
         _ = Guid.TryParse(Request.Cookies["buyerId"], out var buyerId);
-        _ = await _basketService.AddItemToBasket(buyerId, productId, quantity);
+        var basket = await _basketService.AddItemToBasket(buyerId, productId, quantity);
 
-        return Created();
+        return CreatedAtRoute("GetBasket", new BasketDto(basket));
     }
 
     [HttpDelete]
