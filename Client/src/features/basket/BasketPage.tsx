@@ -1,10 +1,28 @@
-import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
-import { Delete } from '@mui/icons-material';
+import { Box, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Add, Delete, Remove } from '@mui/icons-material';
 import { useStoreContext } from '../../app/context/StoreContext';
+import { useState } from 'react';
+import agent from '../../app/api/agent';
+import { LoadingButton } from '@mui/lab';
+import { currencyFormat } from "../../app/utils/currency-util";
 
 export default function BasketPage() {
-    const {basket} = useStoreContext();
+    const {basket, setBasket, removeItem} = useStoreContext();
+	const [status, setStatus] = useState({
+		loading: false,
+		name: ''
+	});
 
+	function handleAddItem(productId: string, name: string) {
+		setStatus({loading: true, name});
+		agent.basket.addItem(productId).then(basket => setBasket(basket)).finally(() => setStatus({loading: true, name: ''}));
+	}
+
+	function handleRemoveItem(productId: string, quantity: number, name: string) {
+		setStatus({loading: true, name});
+		agent.basket.removeItem(productId, quantity).then(() => removeItem(productId, quantity)).finally(() => setStatus({loading: true, name: ''}));
+	}
+	
 	if (!basket)
 		return <Typography variant="h3">Your basket is empty</Typography>;
 
@@ -32,25 +50,47 @@ export default function BasketPage() {
 								}}
 							>
 								<TableCell component="th" scope="row">
-									{item.name}
+									<Box display='flex' alignItems='center'> 
+										<img src={item.pictureUrl} alt={item.name} style={{height: 50, marginRight: 20}} />	
+									</Box>
 								</TableCell>
 								<TableCell align="right">
-									${(item.price / 100).toFixed(2)}
+									{currencyFormat(item.price)}
 								</TableCell>
-								<TableCell align="right">{item.quantity}</TableCell>
-								<TableCell align="right">${(item.price * item.quantity / 100).toFixed(2)}</TableCell>
+								<TableCell align="right">{item.quantity}
+									<LoadingButton loading={status.loading && status.name === 'rem' + item.productId} onClick={() => handleRemoveItem(item.productId, 1, 'rem' + item.productId)} color='error'>
+										<Remove>
+											
+										</Remove>
+									</LoadingButton>
+									<LoadingButton loading={status.loading && status.name === 'add' + item.productId} onClick={() => handleAddItem(item.productId, 'add' + item.productId)} color='secondary'>
+										<Add>
+											
+										</Add>
+									</LoadingButton>
+								</TableCell>
+								<TableCell align="right">{currencyFormat(item.price * item.quantity)}</TableCell>
 								<TableCell align="right">
-									<IconButton color='error'>
+									<LoadingButton loading={status.loading && status.name === 'del' + item.productId} onClick={() => handleRemoveItem(item.productId, item.quantity, 'del' + item.productId)} color='error'>
                                         <Delete>
 
                                         </Delete>
-                                    </IconButton>
+                                    </LoadingButton>
 								</TableCell>
 							</TableRow>
 						))}
 					</TableBody>
 				</Table>
 			</TableContainer>
+			<Grid container>
+				<Grid item xs={6}></Grid>
+				<Grid item xs={6}>
+					<BasketSummary></BasketSummary>
+					<Button component={Link} to='/checkout' variant='contained' size='large' fullWidth>
+
+					</Button>
+				</Grid>
+			</Grid>
 		</>
 	);
 }
