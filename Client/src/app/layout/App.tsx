@@ -8,13 +8,14 @@ import {
 } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { useStoreContext } from '../context/StoreContext';
 import { getCookie } from '../utils/cookie-utils';
 import agent from '../api/agent';
 import LoadingComponent from './LoadingComponent';
+import { useAppDispatch } from '../store/configure-store';
+import { setBasket } from '../../features/basket/basket-slice';
 
 function App() {
-	const { setBasket } = useStoreContext();
+	const dispatch = useAppDispatch();
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
@@ -22,12 +23,12 @@ function App() {
 		if (buyerId) {
 			agent.basket
 				.get()
-				.then((basket) => setBasket(basket))
+				.then((basket) => dispatch(setBasket(basket)))
 				.finally(() => setLoading(false));
 		} else {
 			setLoading(false);
 		}
-	}, [setBasket]);
+	}, [dispatch]);
 
 	const [darkMode, setDarkMode] = useState(false);
 

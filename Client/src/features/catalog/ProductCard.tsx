@@ -13,7 +13,9 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import agent from '../../app/api/agent';
 import { LoadingButton } from '@mui/lab';
-import { useStoreContext } from '../../app/context/StoreContext';
+import { currencyFormat } from '../../app/utils/currency-util';
+import { useAppDispatch } from '../../app/store/configure-store';
+import { setBasket } from '../basket/basket-slice';
 
 interface Props {
 	product: Product;
@@ -22,11 +24,11 @@ interface Props {
 export default function ProductCard({ product }: Props) {
 	const [loading, setLoading] = useState(false);
 
-	const {setBasket} = useStoreContext();
+	const dispatch = useAppDispatch();
 
 	function handleAddItem(productId: string) {
 		setLoading(true);
-		agent.basket.addItem(productId).then((basket) => setBasket(basket)).finally(() => setLoading(false));
+		agent.basket.addItem(productId).then((basket) => dispatch(setBasket(basket))).finally(() => setLoading(false));
 	}
 
 	return (
