@@ -6,7 +6,8 @@ import { basketSlice } from "../../features/basket/basket-slice";
 export const store = configureStore({
     reducer: {
         counter: counterSlice.reducer,
-        basket: basketSlice.reducer
+        basket: basketSlice.reducer,
+        catalog: catalogSlice.reducer
     }
 });
 
