@@ -1,5 +1,6 @@
 import LoadingComponent from '../../app/layout/LoadingComponent';
 import { useAppDispatch, useAppSelector } from '../../app/store/configure-store';
+import { productSelectors, fetchProductsAsync } from './catalog-slice';
 import ProductList from './ProductList';
 import { useEffect } from 'react';
 

@@ -1,5 +1,6 @@
 export const handleError = (error: unknown) => {
 	console.error(error);
+	throw error;
 };
 
 export const handleValidationError = (errors: string[]) => {

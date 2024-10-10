@@ -1,9 +1,22 @@
+import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
+import agent from "../../app/api/agent";
+import { Product } from "../../app/models/product";
+import { RootState } from "../../app/store/configure-store";
+
 const productAdapter = createEntityAdapter<Product>();
 
 export const fetchProductsAsync = createAsyncThunk<Product[]>(
     'catalog/fetchProductsAsync',
     async () => {
         return await agent.catalog.list();
+    }
+)
+
+export const fetchProductAsync = createAsyncThunk<Product, string>(
+    'catalog/fetchProductAsync',
+    async (productId, thunkApi) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return await agent.catalog.details(productId).catch((error: any) => thunkApi.rejectWithValue({error: error.data}));
     }
 )
 
@@ -24,6 +37,16 @@ export const catalogSlice = createSlice({
             state.productsLoaded = true;
         }),
         builder.addCase(fetchProductsAsync.rejected, (state) => {
+            state.status = 'idle';
+        }),
+        builder.addCase(fetchProductAsync.pending, (state) => {
+            state.status = 'pendingFetchProduct'
+        }),
+        builder.addCase(fetchProductAsync.fulfilled, (state, action) => {
+            productAdapter.upsertOne(state, action.payload);
+            state.status = 'idle';
+        }),
+        builder.addCase(fetchProductAsync.rejected, (state) => {
             state.status = 'idle';
         })
     })
