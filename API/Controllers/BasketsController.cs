@@ -32,10 +32,17 @@ public class BasketsController : BaseApiController
     [HttpPost]
     public async Task<ActionResult> AddItemToBasket(Guid productId, int quantity)
     {
-        _ = Guid.TryParse(Request.Cookies["buyerId"], out var buyerId);
-        var basket = await _basketService.AddItemToBasket(buyerId, productId, quantity);
+        try
+        {
+            _ = Guid.TryParse(Request.Cookies["buyerId"], out var buyerId);
+            var basket = await _basketService.AddItemToBasket(buyerId, productId, quantity);
 
-        return CreatedAtRoute("GetBasket", new BasketDto(basket));
+            return CreatedAtRoute("GetBasket", new BasketDto(basket));
+        }
+        catch (Exception ex) 
+        {
+            return BadRequest(ex);
+        }
     }
 
     [HttpDelete]

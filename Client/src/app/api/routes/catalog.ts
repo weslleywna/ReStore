@@ -6,7 +6,7 @@ const endpointPrefix = 'products';
 const catalog = {
 	list: () => requests.get(`${endpointPrefix}`).catch(handleError),
 	details: (id: string | undefined) =>
-		requests.get(`${endpointPrefix}/${id}`).catch(handleError),
+		requests.get(`${endpointPrefix}/${id}`),
 };
 
 export default catalog;

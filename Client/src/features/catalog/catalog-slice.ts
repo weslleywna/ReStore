@@ -7,16 +7,23 @@ const productAdapter = createEntityAdapter<Product>();
 
 export const fetchProductsAsync = createAsyncThunk<Product[]>(
     'catalog/fetchProductsAsync',
-    async () => {
-        return await agent.catalog.list();
+    async (_, thunkApi) => {
+        try {
+            return await agent.catalog.list();
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({error: error.data});
+        }
     }
 )
 
 export const fetchProductAsync = createAsyncThunk<Product, string>(
     'catalog/fetchProductAsync',
     async (productId, thunkApi) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return await agent.catalog.details(productId).catch((error: any) => thunkApi.rejectWithValue({error: error.data}));
+        try {
+            return await agent.catalog.details(productId);
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({error: error.data});
+        }
     }
 )
 

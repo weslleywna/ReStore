@@ -14,26 +14,25 @@ const initialState: BasketState = {
 
 export const addBasketItemAsync = createAsyncThunk<Basket, {productId: string, quantity?: number}>(
     'basket/addBasketItemAsync',
-    async ({productId, quantity = 1}) => {
+    async ({productId, quantity = 1}, thunkApi) => {
         try {
             return await agent.basket.addItem(productId, quantity);
-        } catch (error) {
-            console.log(error);
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({error: error.data});
         }
     }
 )
 
 export const removeBasketItemAsync = createAsyncThunk<void, {productId: string, quantity: number, name?: string}>(
     'basket/removeBasketItemAsync',
-    async ({productId, quantity}) => {
+    async ({productId, quantity}, thunkApi) => {
         try {
             return await agent.basket.removeItem(productId, quantity);
-        } catch (error) {
-            console.log(error);
+        } catch (error: any) {
+            return thunkApi.rejectWithValue({error: error.data});
         }
     }
 )
-
 
 export const basketSlice = createSlice({
     name: 'basket',
