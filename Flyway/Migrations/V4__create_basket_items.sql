@@ -8,3 +8,8 @@ CREATE TABLE IF NOT EXISTS basket_items (
     CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE,  
     CONSTRAINT fk_basket FOREIGN KEY (basket_id) REFERENCES baskets (id) ON DELETE CASCADE
 );
+
+CREATE TRIGGER update_timestamp_trigger
+BEFORE UPDATE ON basket_items
+FOR EACH ROW
+EXECUTE FUNCTION update_timestamp();

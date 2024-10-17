@@ -1,5 +1,9 @@
+using System.Text.Json;
+using API.Dtos;
+using API.Enums;
 using API.Models;
 using API.Services.Interfaces;
+using API.Utils;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -19,9 +23,11 @@ public class ProductsController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Product>>> Get()
+    public async Task<ActionResult<PagedList<Product>>> Get([FromQuery] ProductGetAllRequestDto productGetAllRequestDto)
     {
-        var products = await _productService.GetAll();
+        var products = await _productService.GetAllPaginated(productGetAllRequestDto);
+
+        Response.Headers.Append("Pagination", JsonSerializer.Serialize(products.PaginationMetaData));
         
         return Ok(products);
     }

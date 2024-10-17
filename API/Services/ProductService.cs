@@ -1,7 +1,9 @@
 using API.Customs.Exceptions;
 using API.Data.Repositories.Interfaces;
+using API.Dtos;
 using API.Models;
 using API.Services.Interfaces;
+using API.Utils;
 
 namespace API.Services
 {
@@ -14,9 +16,10 @@ namespace API.Services
             _productRepository = productRepository;
         }
 
-        public async Task<IEnumerable<Product>> GetAll()
+        public async Task<PagedList<Product>> GetAllPaginated(ProductGetAllRequestDto productGetAllRequestDto)
         {
-            return await _productRepository.GetAll();
+            var (products, totalItems) = await _productRepository.GetAllPaginated(productGetAllRequestDto);
+            return PagedList<Product>.ToPagedList(products, totalItems, 0, 0); 
         }
 
         public async Task<Product> GetById(Guid id)

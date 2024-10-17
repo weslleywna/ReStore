@@ -10,6 +10,7 @@ export const fetchProductsAsync = createAsyncThunk<Product[]>(
     async (_, thunkApi) => {
         try {
             return await agent.catalog.list();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             return thunkApi.rejectWithValue({error: error.data});
         }
@@ -21,6 +22,7 @@ export const fetchProductAsync = createAsyncThunk<Product, string>(
     async (productId, thunkApi) => {
         try {
             return await agent.catalog.details(productId);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             return thunkApi.rejectWithValue({error: error.data});
         }
