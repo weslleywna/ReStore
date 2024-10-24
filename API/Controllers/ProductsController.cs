@@ -1,6 +1,7 @@
 using System.Text.Json;
 using API.Dtos;
 using API.Enums;
+using API.Extensions;
 using API.Models;
 using API.Services.Interfaces;
 using API.Utils;
@@ -27,7 +28,7 @@ public class ProductsController : BaseApiController
     {
         var products = await _productService.GetAllPaginated(productGetAllRequestDto);
 
-        Response.Headers.Append("Pagination", JsonSerializer.Serialize(products.PaginationMetaData));
+        Response.AddPaginationHeader(products.PaginationMetaData);
         
         return Ok(products);
     }
@@ -38,5 +39,14 @@ public class ProductsController : BaseApiController
         var products = await _productService.GetById(id);
         
         return Ok(products);
+    }
+
+    [HttpGet("filters")]
+    public async Task<ActionResult> GetFilters()
+    {
+        var brands = await _productService.GetAllProductsBrands();
+        var types = await _productService.GetAllProductsTypes();
+
+        return Ok(new {brands, types});
     }
 }

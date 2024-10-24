@@ -8,5 +8,7 @@ namespace API.Services.Interfaces
     {
         Task<PagedList<Product>> GetAllPaginated(ProductGetAllRequestDto productGetAllRequestDto);
         Task<Product> GetById(Guid id);
+        Task<IEnumerable<string>> GetAllProductsBrands();
+        Task<IEnumerable<string>> GetAllProductsTypes();
     }
 }

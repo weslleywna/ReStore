@@ -90,5 +90,25 @@ namespace API.Data.Repositories
 
             return (products, totalRecords);
         }
+
+        public async Task<IEnumerable<string>> GetAllProductsBrands()
+        {
+            const string sql = @"SELECT DISTINCT p.brand
+                                FROM products p";
+
+            var result = await _session.Connection.QueryAsync<string>(sql);
+
+            return result;
+        }
+
+        public async Task<IEnumerable<string>> GetAllProductsTypes()
+        {
+            const string sql = @"SELECT DISTINCT p.type
+                                FROM products p";
+
+            var result = await _session.Connection.QueryAsync<string>(sql);
+
+            return result;
+        }
     }
 }

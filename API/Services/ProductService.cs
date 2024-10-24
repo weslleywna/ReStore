@@ -19,7 +19,21 @@ namespace API.Services
         public async Task<PagedList<Product>> GetAllPaginated(ProductGetAllRequestDto productGetAllRequestDto)
         {
             var (products, totalItems) = await _productRepository.GetAllPaginated(productGetAllRequestDto);
-            return PagedList<Product>.ToPagedList(products, totalItems, 0, 0); 
+            return PagedList<Product>.ToPagedList(products, totalItems, productGetAllRequestDto.PageNumber, productGetAllRequestDto.PageSize); 
+        }
+
+        public async Task<IEnumerable<string>> GetAllProductsBrands()
+        {
+            var brands = await _productRepository.GetAllProductsBrands();
+
+            return brands;
+        }
+
+        public async Task<IEnumerable<string>> GetAllProductsTypes()
+        {
+            var types = await _productRepository.GetAllProductsTypes();
+
+            return types;
         }
 
         public async Task<Product> GetById(Guid id)
