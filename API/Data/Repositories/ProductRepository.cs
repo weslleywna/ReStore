@@ -26,14 +26,18 @@ namespace API.Data.Repositories
                 countSqlBuilder.Append("AND (name ILIKE @SearchTerm OR description ILIKE @SearchTerm) ");
             }
 
-            if (productGetAllRequestDto.Brands != null && productGetAllRequestDto.Brands.Count != 0)
+            var brandList = new List<string>();
+            if (productGetAllRequestDto.Brands != null)
             {
+                brandList.AddRange([.. productGetAllRequestDto.Brands.Split(",")]);
                 sqlBuilder.Append("AND brand = ANY(@Brands) ");
                 countSqlBuilder.Append("AND brand = ANY(@Brands) ");
             }
 
-            if (productGetAllRequestDto.Types != null && productGetAllRequestDto.Types.Count != 0)
+            var typesList = new List<string>();
+            if (productGetAllRequestDto.Types != null)
             {
+                typesList.AddRange([.. productGetAllRequestDto.Types.Split(",")]);
                 sqlBuilder.Append("AND type = ANY(@Types) ");
                 countSqlBuilder.Append("AND type = ANY(@Types) ");
             }
@@ -58,8 +62,10 @@ namespace API.Data.Repositories
                 case ProductOrder.UpdatedAtDesc:
                     sqlBuilder.Append("ORDER BY updated_at DESC ");
                     break;
-                default:
+                case ProductOrder.CreatedAtDesc:
                     sqlBuilder.Append("ORDER BY created_at DESC ");
+                    break;
+                default:
                     break;
             }
 
@@ -71,8 +77,8 @@ namespace API.Data.Repositories
                 new
                 {
                     SearchTerm = $"%{productGetAllRequestDto.SearchTerm}%",
-                    productGetAllRequestDto.Brands,
-                    productGetAllRequestDto.Types,
+                    Brands = brandList ?? [],
+                    Types = typesList ?? [],
                     productGetAllRequestDto.PageSize,
                     Offset = offset
                 }
@@ -83,8 +89,8 @@ namespace API.Data.Repositories
                 new
                 {
                     SearchTerm = $"%{productGetAllRequestDto.SearchTerm}%",
-                    productGetAllRequestDto.Brands,
-                    productGetAllRequestDto.Types
+                    Brands = brandList ?? [],
+                    Types = typesList ?? [],
                 }
             );
 

@@ -9,7 +9,7 @@ export const getQueryStringParams = (
   
       if (value) {
         if (Array.isArray(value)) {
-          params.append(key, value.join(','));
+          if (value.length > 0) params.append(key, value.join(','));
         } else {
           params.append(key, value.toString());
         }

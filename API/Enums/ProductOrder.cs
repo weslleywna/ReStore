@@ -7,6 +7,7 @@ namespace API.Enums
         NameAsc,
         NameDesc,
         UpdatedAtAsc,
-        UpdatedAtDesc
+        UpdatedAtDesc,
+        CreatedAtDesc
     }
 }

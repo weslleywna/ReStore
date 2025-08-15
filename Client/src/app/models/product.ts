@@ -1,4 +1,4 @@
-import { ProductOrderEnum } from "../enums/product-order-enum";
+import { ProductOrderEnum } from "../enums/product-order.enum";
 
 export interface Product {
 	id: string;
@@ -12,10 +12,10 @@ export interface Product {
 }
 
 export interface ProductParams{
-    orderBy?: ProductOrderEnum;
+    orderBy: ProductOrderEnum;
     searchTerm?: string;
-    types?: string[];
-    brands?: string[];
+    types: string[];
+    brands: string[];
 	pageNumber: number;
     pageSize: number;
 }
